@@ -4,9 +4,14 @@ const WebSocket = require("ws");
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const http = require("http");
 
-// WebSocket server for Chrome Extension
-const wss = new WebSocket.Server({ port: 8094 });
+// Express 앱 생성
+const app = express();
+const server = http.createServer(app);
+
+// WebSocket server를 같은 서버에 연결
+const wss = new WebSocket.Server({ server });
 let chromeExtensionSocket = null;
 let availableTools = [];
 
@@ -1082,8 +1087,7 @@ process.stdin.on("data", async (chunk) => {
 	}
 });
 
-// Optional: HTTP endpoint for health checks
-const app = express();
+// HTTP endpoint for health checks
 app.get("/health", (req, res) => {
 	res.json({
 		status: "ok",
@@ -1115,11 +1119,14 @@ app.get("/openapi.json", (req, res) => {
 	}
 });
 
-app.listen(8094, () => {
-	console.error("🎯 Enhanced Browser MCP Server with Anti-Detection Features");
-	console.error("Health check endpoint available at http://localhost:8094/health");
+// 하나의 포트로 서버 시작
+const PORT = process.env.OPENDIA_PORT || 8094;
+server.listen(PORT, () => {
+	console.error(`🎯 Enhanced Browser MCP Server with Anti-Detection Features`);
+	console.error(`Health check endpoint available at http://localhost:${PORT}/health`);
+	console.error(`WebSocket endpoint available at ws://localhost:${PORT}`);
 });
 
 console.error("🚀 Enhanced Browser MCP Server started");
-console.error("🔌 Waiting for Chrome Extension connection on ws://localhost:8094");
+console.error(`🔌 Waiting for Chrome Extension connection on ws://localhost:${PORT}`);
 console.error("🎯 Features: Anti-detection bypass + intelligent automation");
