@@ -8,6 +8,7 @@ const http = require("http");
 
 // Express 앱 생성
 const app = express();
+app.use(express.json()); // JSON 요청 본문 파싱 활성화
 const server = http.createServer(app);
 
 // WebSocket server를 같은 서버에 연결
@@ -1100,6 +1101,38 @@ app.get("/health", (req, res) => {
 			"Element state detection and interaction readiness",
 			"Performance analytics and token optimization",
 		],
+	});
+});
+
+// 모든 도구에 대한 동적 POST 라우트 생성
+getFallbackTools().forEach((tool) => {
+	app.post(`/${tool.name}`, async (req, res) => {
+		console.error(`Received HTTP POST for /${tool.name}`);
+		if (!chromeExtensionSocket || chromeExtensionSocket.readyState !== WebSocket.OPEN) {
+			return res.status(503).json({
+				error: "Chrome Extension not connected",
+				message: "Please install and activate the browser extension, then try again.",
+			});
+		}
+
+		try {
+			const toolResult = await callBrowserTool(tool.name, req.body || {});
+			const formattedResult = formatToolResult(tool.name, toolResult);
+			res.json({
+				content: [
+					{
+						type: "text",
+						text: formattedResult,
+					},
+				],
+				isError: false,
+			});
+		} catch (error) {
+			res.status(500).json({
+				error: "Tool execution failed",
+				message: error.message,
+			});
+		}
 	});
 });
 
