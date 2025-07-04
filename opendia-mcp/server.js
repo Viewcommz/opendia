@@ -1121,5 +1121,5 @@ app.listen(8094, () => {
 });
 
 console.error("🚀 Enhanced Browser MCP Server started");
-console.error("🔌 Waiting for Chrome Extension connection on ws://localhost:3000");
+console.error("🔌 Waiting for Chrome Extension connection on ws://localhost:8094");
 console.error("🎯 Features: Anti-detection bypass + intelligent automation");
