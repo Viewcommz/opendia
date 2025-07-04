@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 // WebSocket server for Chrome Extension
-const wss = new WebSocket.Server({ port: 3000 });
+const wss = new WebSocket.Server({ port: 8094 });
 let chromeExtensionSocket = null;
 let availableTools = [];
 
