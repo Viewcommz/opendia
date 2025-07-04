@@ -1115,9 +1115,9 @@ app.get("/openapi.json", (req, res) => {
 	}
 });
 
-app.listen(3000, () => {
+app.listen(8094, () => {
 	console.error("🎯 Enhanced Browser MCP Server with Anti-Detection Features");
-	console.error("Health check endpoint available at http://localhost:3000/health");
+	console.error("Health check endpoint available at http://localhost:8094/health");
 });
 
 console.error("🚀 Enhanced Browser MCP Server started");
