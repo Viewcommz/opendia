@@ -3,6 +3,7 @@
 const WebSocket = require("ws");
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
 
 // WebSocket server for Chrome Extension
 const wss = new WebSocket.Server({ port: 3000 });
@@ -1100,13 +1101,13 @@ app.get("/health", (req, res) => {
 
 app.get("/openapi.json", (req, res) => {
 	try {
-		// openapi.json 파일 읽기
-		const openapiContent = fs.readFileSync("./openapi.json", "utf8");
+		// __dirname을 사용하여 절대 경로로 변경
+		const openapiPath = path.join(__dirname, "openapi.json");
+		const openapiContent = fs.readFileSync(openapiPath, "utf8");
 		const openapiJson = JSON.parse(openapiContent);
 		res.json(openapiJson);
 	} catch (error) {
 		console.error("Error reading openapi.json:", error);
-		// 파일 읽기 실패 시 기본값 반환
 		res.status(500).json({
 			error: "Failed to load OpenAPI specification",
 			message: error.message,
@@ -1114,9 +1115,9 @@ app.get("/openapi.json", (req, res) => {
 	}
 });
 
-app.listen(3001, () => {
+app.listen(3000, () => {
 	console.error("🎯 Enhanced Browser MCP Server with Anti-Detection Features");
-	console.error("Health check endpoint available at http://localhost:3001/health");
+	console.error("Health check endpoint available at http://localhost:3000/health");
 });
 
 console.error("🚀 Enhanced Browser MCP Server started");
